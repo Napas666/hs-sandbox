@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+
+  # ── Backend: FastAPI + SQLite ──────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hs-bg-backend
+    environment:
+      - DB_PATH=/app/data/battlegrounds.db
+    volumes:
+      - db-data:/app/data
+      # После запуска scripts/fetch_cards.py — раскомментируй строку ниже
+      # чтобы свежий cards_scraped.json автоматически попадал в контейнер:
+      # - ./scripts/cards_scraped.json:/app/data/cards_scraped.json:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ── Frontend: React (Vite) → nginx ────────────────────────────────────────
+  # nginx также проксирует /api/* → backend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hs-bg-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - certbot-www:/var/www/certbot:ro
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
+  certbot-www:

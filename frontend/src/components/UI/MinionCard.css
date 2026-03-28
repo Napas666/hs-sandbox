@@ -1,0 +1,335 @@
+/* ════════════════════════════════════════════════════════════════
+   BG CARD — стиль Hearthstone Battlegrounds
+   ════════════════════════════════════════════════════════════════ */
+
+.bg-card {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  overflow: visible;
+  transition: transform .2s, filter .2s;
+  flex-shrink: 0;
+}
+
+/* Sizes */
+.bg-card--sm { width: 100px; }
+.bg-card--md { width: 120px; }
+.bg-card--lg { width: 150px; }
+
+.bg-card:hover {
+  transform: translateY(-6px) scale(1.06);
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,.7))
+          drop-shadow(0 0 14px var(--frame-glow, rgba(160,144,176,.4)));
+  z-index: 20;
+}
+
+/* Gold pulsing */
+.bg-card--gold .bg-card__frame {
+  animation: pulse-gold 3s ease-in-out infinite;
+  box-shadow: 0 0 24px rgba(244,208,63,.45), inset 0 0 20px rgba(244,208,63,.08);
+}
+
+/* Gold shimmer */
+.bg-card__gold-shimmer {
+  position: absolute; inset: 0; z-index: 10; pointer-events: none;
+  border-radius: 12px;
+  background: linear-gradient(105deg, transparent 30%, rgba(244,208,63,.15) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+/* ── FRAME ──────────────────────────────────────────────────── */
+.bg-card__frame {
+  position: relative;
+  width: 100%;
+  /* Golden/dark parchment look */
+  background:
+    radial-gradient(ellipse at 50% 30%, var(--frame-bg, #2a2035) 0%, #0e0a16 100%);
+  border: 2px solid var(--frame-border, #7a6a8a);
+  border-radius: 12px;
+  padding-bottom: 6px;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.8),
+    inset 0 0 30px rgba(0,0,0,.5),
+    0 4px 16px rgba(0,0,0,.7);
+  overflow: hidden;
+}
+
+/* Inner decorative top arc */
+.bg-card__frame::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,.06) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: 10px 10px 50% 50%;
+}
+
+/* Bottom scroll line decorations */
+.bg-card__frame::after {
+  content: '';
+  position: absolute; bottom: 24px; left: 8px; right: 8px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--frame-border, #7a6a8a), transparent);
+  opacity: .5;
+}
+
+/* ── TIER BADGE (top-left) ──────────────────────────────────── */
+.bg-card__tier-badge {
+  position: absolute;
+  top: 6px; left: 6px;
+  z-index: 5;
+  background: rgba(0,0,0,.65);
+  border: 1px solid var(--frame-border);
+  border-radius: 8px;
+  padding: 2px 5px;
+  display: flex; align-items: center;
+}
+.bg-card__stars {
+  display: flex; gap: 1px; align-items: center;
+}
+.bg-card__star {
+  font-size: .65em;
+  line-height: 1;
+  filter: drop-shadow(0 0 3px var(--star-color));
+}
+.bg-card__star--t7 {
+  font-size: .75em;
+}
+
+/* ── PORTRAIT OVAL ──────────────────────────────────────────── */
+.bg-card__portrait-wrap {
+  position: relative;
+  margin: 24px auto 0;
+  /* aspect ratio: slightly taller than wide like in game */
+}
+.bg-card--sm .bg-card__portrait-wrap { width: 72px; height: 76px; margin-top: 22px; }
+.bg-card--md .bg-card__portrait-wrap { width: 88px; height: 94px; margin-top: 26px; }
+.bg-card--lg .bg-card__portrait-wrap { width: 110px; height: 118px; margin-top: 32px; }
+
+.bg-card__portrait-oval {
+  width: 100%; height: 100%;
+  border-radius: 50% / 46%;
+  overflow: hidden;
+  border: 2px solid var(--frame-border);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.7),
+    inset 0 0 20px rgba(0,0,0,.4),
+    0 0 12px var(--frame-glow, rgba(120,100,150,.4));
+  background: #0a0810;
+}
+
+.bg-card__portrait-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.bg-card__portrait-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50% / 46%;
+}
+.bg-card__portrait-emoji {
+  font-size: 2em;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.8));
+}
+
+/* Gold portrait ring */
+.bg-card__portrait-wrap--gold .bg-card__portrait-oval {
+  border-color: #f4d03f;
+  box-shadow: 0 0 16px rgba(244,208,63,.6), inset 0 0 20px rgba(244,208,63,.1);
+}
+
+/* Divine Shield aura */
+.bg-card__ds-aura {
+  position: absolute; inset: -5px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  box-shadow: 0 0 14px #60a5fa, 0 0 28px rgba(96,165,250,.4);
+  animation: pulse-gold 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── NAME SCROLL ─────────────────────────────────────────────── */
+.bg-card__name-scroll {
+  position: relative;
+  margin: 4px 6px 0;
+  padding: 4px 8px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(30,20,45,.9) 15%,
+    rgba(40,28,58,.95) 50%,
+    rgba(30,20,45,.9) 85%,
+    transparent 100%);
+  border-top: 1px solid rgba(255,255,255,.12);
+  border-bottom: 1px solid rgba(0,0,0,.5);
+  text-align: center;
+}
+.bg-card__name-text {
+  font-family: var(--font-title);
+  font-size: .72em;
+  color: #f0e8d0;
+  text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 8px rgba(0,0,0,.6);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.bg-card--md .bg-card__name-text { font-size: .74em; }
+.bg-card--lg .bg-card__name-text { font-size: .8em; }
+.bg-card--gold .bg-card__name-text { color: #ffd060; }
+.bg-card__name-gold { color: #f4d03f; font-size: .8em; margin: 0 2px; }
+
+/* ── DESCRIPTION ─────────────────────────────────────────────── */
+.bg-card__desc {
+  margin: 3px 8px;
+  padding: 3px 4px;
+  min-height: 28px;
+  text-align: center;
+}
+.bg-card__desc-text {
+  font-family: var(--font-body);
+  font-size: .62em;
+  color: rgba(240,230,210,.85);
+  line-height: 1.3;
+  display: block;
+}
+.bg-card--md .bg-card__desc-text { font-size: .64em; }
+.bg-card--lg .bg-card__desc-text { font-size: .7em; }
+
+/* ── RACE TAG ────────────────────────────────────────────────── */
+.bg-card__race-tag {
+  text-align: center;
+  font-family: var(--font-title);
+  font-size: .58em;
+  letter-spacing: .06em;
+  opacity: .85;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+/* ── ATK / HP GEMS ───────────────────────────────────────────── */
+.bg-card__gem {
+  position: absolute;
+  bottom: 6px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-title);
+  font-weight: 900;
+  font-size: .82em;
+  line-height: 1;
+  border: 2px solid;
+  box-shadow: 0 2px 6px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.2);
+  z-index: 4;
+}
+.bg-card--md .bg-card__gem { width: 30px; height: 30px; font-size: .88em; bottom: 7px; }
+.bg-card--lg .bg-card__gem { width: 36px; height: 36px; font-size: 1em;   bottom: 8px; }
+
+.bg-card__gem--atk {
+  left: 6px;
+  background: radial-gradient(circle at 40% 35%, #c84040, #7a1a1a);
+  border-color: #ff7060;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.8);
+}
+.bg-card__gem--hp {
+  right: 6px;
+  background: radial-gradient(circle at 40% 35%, #3080c0, #144878);
+  border-color: #60b0ff;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.8);
+}
+.bg-card__gem--edit { cursor: pointer; transition: filter .15s; }
+.bg-card__gem--edit:hover { filter: brightness(1.4); }
+
+.bg-card__gem-input {
+  width: 20px; background: transparent; border: none;
+  border-bottom: 1px solid rgba(255,255,255,.7);
+  color: #fff; font: inherit; text-align: center; outline: none;
+}
+
+/* ── KEYWORDS ────────────────────────────────────────────────── */
+.bg-card__kws {
+  display: flex; flex-wrap: wrap; gap: 2px;
+  justify-content: center; margin: 0 6px 18px;
+}
+.bg-card__kw {
+  font-size: 11px; padding: 1px 3px;
+  background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 4px;
+}
+.bg-card__kw--toggle { cursor: pointer; transition: transform .15s; }
+.bg-card__kw--toggle:hover { transform: scale(1.25); }
+
+/* ── ACTION BUTTON ───────────────────────────────────────────── */
+.bg-card__action {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 22px; height: 22px;
+  border-radius: 50%; border: none; cursor: pointer;
+  font-size: 15px; font-weight: bold;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .15s, background .15s;
+  z-index: 10;
+}
+.bg-card__action--add {
+  background: rgba(46,204,113,.3); color: #2ecc71;
+  border: 1px solid rgba(46,204,113,.6);
+}
+.bg-card__action--add:hover { background: rgba(46,204,113,.6); transform: scale(1.2); }
+.bg-card__action--rem {
+  background: rgba(231,76,60,.3); color: #e74c3c;
+  border: 1px solid rgba(231,76,60,.6);
+}
+.bg-card__action--rem:hover { background: rgba(231,76,60,.6); transform: scale(1.2); }
+
+/* ── TOOLTIP ─────────────────────────────────────────────────── */
+.bg-card__tip {
+  position: absolute;
+  bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%);
+  width: 230px;
+  background: linear-gradient(160deg,#1c1528 0%,#100c1e 100%);
+  border: 1px solid var(--tc, #7a6a8a);
+  border-radius: 12px; padding: 12px;
+  z-index: 300; pointer-events: none;
+  box-shadow: 0 8px 40px rgba(0,0,0,.95), 0 0 20px rgba(0,0,0,.5);
+  animation: fadeIn .12s ease;
+}
+.bg-card__tip-arrow {
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: var(--tc, #7a6a8a);
+}
+.bg-card__tip-arrow::before {
+  content: ''; position: absolute; top: -10px; left: -7px;
+  border: 7px solid transparent; border-top-color: #100c1e;
+}
+.bg-card__tip-name {
+  font-family: var(--font-title); font-size: .9rem; font-weight: 700;
+  color: var(--text-bright); text-align: center; margin-bottom: 3px;
+}
+.bg-card__tip-tier {
+  font-family: var(--font-title); font-size: .7rem;
+  text-align: center; margin-bottom: 6px; opacity: .9;
+}
+.bg-card__tip-race {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 2px 10px; border-radius: 12px; border: 1px solid;
+  font-family: var(--font-title); font-size: .68rem;
+  text-transform: uppercase; letter-spacing: .06em;
+  width: fit-content; margin: 0 auto 8px;
+}
+.bg-card__tip-text {
+  font-family: var(--font-body); font-size: .8rem; color: var(--text-bright);
+  line-height: 1.45; text-align: center; margin-bottom: 8px;
+  background: rgba(255,255,255,.04); border-radius: 6px; padding: 6px 8px;
+}
+.bg-card__tip-kws { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+.bg-card__tip-kw {
+  display: flex; align-items: center; gap: 6px; padding: 3px 8px;
+  border-radius: 6px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+}
+.bg-card__tip-kw-name { color: #d4a017; font-family: var(--font-title); font-size: .7rem; }
+.bg-card__tip-stats {
+  display: flex; justify-content: center; gap: 16px;
+  border-top: 1px solid rgba(255,255,255,.07); padding-top: 6px;
+  font-family: var(--font-title); font-weight: 700; font-size: .85rem;
+}
